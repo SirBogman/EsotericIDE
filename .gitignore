@@ -5,3 +5,5 @@ syntax:glob
 Builds
 .vs/
 packages/
+bin/
+obj/

@@ -22,27 +22,27 @@ namespace EsotericIDE
             Icon = Resources.EsotericIDEIcon;
             init();
 
-            try
-            {
-                var cmd = CommandLineParser.Parse<CommandLine>(cmdArgs);
+            //try
+            //{
+            //    var cmd = CommandLineParser.Parse<CommandLine>(cmdArgs);
 
-                if (cmd.Filename != null)
-                    openCore(cmd.Filename);
+            //    if (cmd.Filename != null)
+            //        openCore(cmd.Filename);
 
-                if (cmd.Filename != null && cmd.LanguagePreselect == null)
-                {
-                    // Try to guess language from file extension
-                    var ext = Path.GetExtension(cmd.Filename).Substring(1);
-                    cmd.LanguagePreselect = Languages.FirstOrDefault(pl => pl.DefaultFileExtension.Equals(ext, StringComparison.InvariantCultureIgnoreCase));
-                }
+            //    if (cmd.Filename != null && cmd.LanguagePreselect == null)
+            //    {
+            //        // Try to guess language from file extension
+            //        var ext = Path.GetExtension(cmd.Filename).Substring(1);
+            //        cmd.LanguagePreselect = Languages.FirstOrDefault(pl => pl.DefaultFileExtension.Equals(ext, StringComparison.InvariantCultureIgnoreCase));
+            //    }
 
-                if (cmd.LanguagePreselect != null)
-                    cmbLanguage.SelectedItem = cmd.LanguagePreselect;
-            }
-            catch (CommandLineParseException px)
-            {
-                txtSource.Text = px.GetUsageInfo().ToString();
-            }
+            //    if (cmd.LanguagePreselect != null)
+            //        cmbLanguage.SelectedItem = cmd.LanguagePreselect;
+            //}
+            //catch (CommandLineParseException px)
+            //{
+            //    txtSource.Text = px.GetUsageInfo().ToString();
+            //}
         }
 
         private void init()
