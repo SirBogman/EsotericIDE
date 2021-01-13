@@ -364,10 +364,8 @@ namespace EsotericIDE.Hexagony
                             var memVal = _memory.Get();
                             _memory.Set(memVal * 10 + (memVal < 0 ? -opVal : opVal));
                         }
-                        else if ((opcode >= 'a' && opcode <= 'z') || (opcode >= 'A' && opcode <= 'Z'))
-                            _memory.Set(opcode);
                         else
-                            throw new Exception("'{0}' is not a recognized instruction.".Fmt(opcode));
+                            _memory.Set(opcode);
                         break;
                 }
 
