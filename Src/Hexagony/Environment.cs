@@ -270,7 +270,7 @@ namespace EsotericIDE.Hexagony
                 // Execute the current instruction
                 var newIp = _activeIp;
                 var opcode = _grid[coords];
-                switch (opcode)
+                switch (opcode.Value)
                 {
                     // NOP
                     case '.': break;
@@ -299,7 +299,7 @@ namespace EsotericIDE.Hexagony
                             rem += rightVal;
                             div--;
                         }
-                        _memory.Set(opcode == ':' ? div : rem);
+                        _memory.Set(opcode.Value == ':' ? div : rem);
                         break;
 
                     // Memory manipulation
@@ -358,14 +358,14 @@ namespace EsotericIDE.Hexagony
 
                     // Digits and letters
                     default:
-                        if (opcode >= '0' && opcode <= '9')
+                        if (opcode.Value >= '0' && opcode.Value <= '9')
                         {
-                            var opVal = opcode - '0';
+                            var opVal = opcode.Value - '0';
                             var memVal = _memory.Get();
                             _memory.Set(memVal * 10 + (memVal < 0 ? -opVal : opVal));
                         }
                         else
-                            _memory.Set(opcode);
+                            _memory.Set(opcode.Value);
                         break;
                 }
 

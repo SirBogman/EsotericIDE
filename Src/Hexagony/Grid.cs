@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 
@@ -9,15 +10,15 @@ namespace EsotericIDE.Hexagony
     class Grid
     {
         public int Size { get; private set; }
-        private char[][] _grid;
+        private Rune[][] _grid;
         private Position[][] _gridPositions;
         private Position _endPos;
 
-        private Grid(int size, int fileLength, IEnumerable<Tuple<char, Position>> data = null)
+        private Grid(int size, int fileLength, IEnumerable<Tuple<Rune, Position>> data = null)
         {
             Size = size;
             using (var e = data == null ? null : data.GetEnumerator())
-                _grid = Ut.NewArray(2 * size - 1, j => Ut.NewArray(2 * size - 1 - Math.Abs(size - 1 - j), i => e != null && e.MoveNext() ? e.Current.Item1 : '.'));
+                _grid = Ut.NewArray(2 * size - 1, j => Ut.NewArray(2 * size - 1 - Math.Abs(size - 1 - j), i => e != null && e.MoveNext() ? e.Current.Item1 : new Rune('.')));
             _endPos = new Position(fileLength, 0);
             using (var e = data == null ? null : data.GetEnumerator())
                 _gridPositions = Ut.NewArray(2 * size - 1, j => Ut.NewArray(2 * size - 1 - Math.Abs(size - 1 - j), i => e != null && e.MoveNext() ? e.Current.Item2 : _endPos));
@@ -25,9 +26,16 @@ namespace EsotericIDE.Hexagony
 
         public static Grid Parse(string input)
         {
+            var index = 0;
             var bare = input
-                .Select((c, i) => Tuple.Create(c, new Position(i, 1)))
-                .Where(tup => tup.Item1 != '`' && !char.IsWhiteSpace(tup.Item1))
+                .EnumerateRunes()
+                .Select(r =>
+                {
+                    var current = index;
+                    index += r.Utf16SequenceLength;
+                    return Tuple.Create(r, new Position(current, r.Utf16SequenceLength));
+                })
+                .Where(tup => tup.Item1.Value != '`' && !Rune.IsWhiteSpace(tup.Item1))
                 .ToArray();
             var size = 1;
             while (3 * size * (size - 1) + 1 < bare.Length)
@@ -35,12 +43,12 @@ namespace EsotericIDE.Hexagony
             return new Grid(size, input.Length, bare);
         }
 
-        public char this[PointAxial coords]
+        public Rune this[PointAxial coords]
         {
             get
             {
                 var tup = axial_to_index(coords);
-                return tup == null ? '.' : _grid[tup.Item1][tup.Item2];
+                return tup == null ? new Rune('.') : _grid[tup.Item1][tup.Item2];
             }
             set
             {
